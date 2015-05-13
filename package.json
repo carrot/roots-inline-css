@@ -1,0 +1,38 @@
+{
+  "name": "roots-inline-css",
+  "version": "0.0.1",
+  "description": "a roots extension for inlining your CSS properties into the style attribute in an html file",
+  "main": "lib",
+  "dependencies": {
+    "lodash": "2.x",
+    "minimatch": "2.x",
+    "roots-util": "0.1.x"
+  },
+  "devDependencies": {
+    "chai": "1.x",
+    "chai-fs": "0.1.x",
+    "coffee-script": "1.7.x",
+    "coveralls": "2.x",
+    "istanbul": "0.3.x",
+    "mocha": "2.x",
+    "roots": "3.0.x"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha",
+    "coverage": "make build; NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha; make unbuild; open coverage/lcov-report/index.html;",
+    "coveralls": "make build; make coveralls; make unbuild;"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carrot/roots-inline-css.git"
+  },
+  "keywords": [
+    "rootsextension"
+  ],
+  "author": "Carrot Creative",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carrot/roots-inline-css/issues"
+  },
+  "homepage": "https://github.com/carrot/roots-inline-css"
+}
