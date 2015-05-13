@@ -11,7 +11,7 @@ before (done) ->
   h.project.install_dependencies('*', done)
 
 after ->
-  # h.project.remove_folders('**/public')
+  h.project.remove_folders('**/public')
 
 describe 'roots compile with inline-css', ->
 

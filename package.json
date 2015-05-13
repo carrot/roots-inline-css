@@ -4,7 +4,8 @@
   "description": "a roots extension for inlining your CSS properties into the style attribute in an html file",
   "main": "lib",
   "dependencies": {
-    "inline-css": "1.0.x",
+    "bluebird": "^2.9.25",
+    "inline-css": "kylemac/inline-css",
     "lodash": "2.x",
     "minimatch": "2.x",
     "roots-util": "0.1.x"

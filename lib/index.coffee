@@ -1,32 +1,29 @@
-RootsUtil = require 'roots-util'
 path      = require 'path'
 fs        = require 'fs'
+Promise   = require 'bluebird'
 inlineCss = require 'inline-css'
 
 module.exports = ->
   class RootsInlineCss
 
     constructor: (@roots) ->
-      @category = 'inline-css'
       @files = []
 
-    fs: ->
-      extract: true
-      detect: (f) -> true
-
     compile_hooks: ->
-      after_pass: (ctx) =>
-        file = ctx.file.file_options.filename
-        ext = path.extname(ctx.file.file_options._path)
-        tgt = path.join(@roots.root, @roots.config.output,
-          ctx.file.file_options._path)
-        @files.push(tgt) if ext == '.html'
+      category = 'inline-css'
+
+      write: (ctx) =>
+        if path.extname(ctx.file_options._path) == '.html'
+          @files.push(ctx)
+          return false
+        else
+          return true
 
     category_hooks: ->
-      after: (ctx) =>
-        options = {}
-        for file in @files
-          options.url = 'file://' + file
-          html = fs.readFileSync(file, 'utf8')
-          # does the job but not properly because it needs to return a promise
-          inlineCss(html, options, (err, html) -> fs.writeFileSync(file, html))
+      after: (ctx, category) =>
+        if category == 'compiled'
+          Promise.map @files, (file) =>
+            tgt = path.join(@roots.root, @roots.config.output,
+              file.file_options._path)
+            inlineCss(file.content, {url: 'file://' + tgt})
+            .then (html) -> fs.writeFile(tgt, html)
