@@ -1,42 +1,32 @@
 RootsUtil = require 'roots-util'
-path = require 'path'
-
-# This is meant to serve as an example...
-
-# Full Roots Extension API documentation located:
-# http://roots.readthedocs.org/en/latest/extensions.html
+path      = require 'path'
+fs        = require 'fs'
+inlineCss = require 'inline-css'
 
 module.exports = ->
   class RootsInlineCss
 
     constructor: (@roots) ->
-      # console.log @roots
+      @category = 'inline-css'
+      @files = []
 
-    # fs: ->
-      # category: 'foo'
-      # extract: true
-      # detect: (f) ->
-        # path.extname(f.relative) == 'js'
+    fs: ->
+      extract: true
+      detect: (f) -> true
 
-    # compile_hooks: ->
-      # category: 'foo'
+    compile_hooks: ->
+      after_pass: (ctx) =>
+        file = ctx.file.file_options.filename
+        ext = path.extname(ctx.file.file_options._path)
+        tgt = path.join(@roots.root, @roots.config.output,
+          ctx.file.file_options._path)
+        @files.push(tgt) if ext == '.html'
 
-      # before_file: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # after_file: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # before_pass: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # after_pass: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # write: ->
-        # false
-
-    # category_hooks: ->
-      # after: (ctx) ->
-          # output = path.join(ctx.roots.config.output_path(), 'build.js')
-          # nodefn.call(fs.writeFile, output, @contents)
+    category_hooks: ->
+      after: (ctx) =>
+        options = {}
+        for file in @files
+          options.url = 'file://' + file
+          html = fs.readFileSync(file, 'utf8')
+          # does the job but not properly because it needs to return a promise
+          inlineCss(html, options, (err, html) -> fs.writeFileSync(file, html))
