@@ -2,8 +2,14 @@ path      = require 'path'
 fs        = require 'fs'
 Promise   = require 'bluebird'
 inlineCss = require 'inline-css'
+_         = require 'lodash'
 
-module.exports = ->
+module.exports = (opts) ->
+
+  opts = _.defaults opts,
+    files: []
+    applyStyleTags: true
+
   class RootsInlineCss
 
     constructor: (@roots) ->

@@ -16,7 +16,8 @@ a roots extension for inlining your CSS properties into the style attribute in a
   rootsInlineCss = require('roots-inline-css')
 
   module.exports =
-    extensions: [rootsInlineCss()]
+    options = {files: '/path/**.html', applyStyleTags:true}
+    extensions: [rootsInlineCss(options)]
   ```
 
 ### Usage
