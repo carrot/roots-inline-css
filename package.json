@@ -8,7 +8,7 @@
     "inline-css": "kylemac/inline-css",
     "lodash": "2.x",
     "minimatch": "2.x",
-    "roots-util": "0.1.x"
+    "roots-util": "^0.1.0"
   },
   "devDependencies": {
     "chai": "1.x",

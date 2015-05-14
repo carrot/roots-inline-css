@@ -2,18 +2,21 @@ path      = require 'path'
 fs        = require 'fs'
 Promise   = require 'bluebird'
 inlineCss = require 'inline-css'
+RootsUtil = require 'roots-util'
 _         = require 'lodash'
 
 module.exports = (opts) ->
-
+  opts ||= {}
   opts = _.defaults opts,
     files: []
     applyStyleTags: true
+
 
   class RootsInlineCss
 
     constructor: (@roots) ->
       @files = []
+      @util = new RootsUtil(@roots)
 
     compile_hooks: ->
       category = 'inline-css'
@@ -31,5 +34,6 @@ module.exports = (opts) ->
           Promise.map @files, (file) =>
             tgt = path.join(@roots.root, @roots.config.output,
               file.file_options._path)
-            inlineCss(file.content, {url: 'file://' + tgt})
+            opts.url ||= 'file://' + tgt
+            inlineCss(file.content, opts)
             .then (html) -> fs.writeFile(tgt, html)

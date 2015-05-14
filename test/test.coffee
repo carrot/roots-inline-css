@@ -25,7 +25,7 @@ describe 'roots compile with inline-css', ->
     contents.should.match /<p style="color: red; text-decoration: underline;">/
     done()
 
-describe 'roots compiled with options', ->
+describe 'inline-css tested with options', ->
 
   before (done) -> compile_fixture.call(@, 'options', done)
 
@@ -34,5 +34,14 @@ describe 'roots compiled with options', ->
     p.should.be.a.file()
     fs.existsSync(p).should.be.ok
     contents = fs.readFileSync(p, 'utf8')
-    contents.should.match /<p style="text-decoration: underline;">/
+    contents.should.match /<body style="background: blue;"><p style="text-decoration: underline;">/
+    done()
+
+describe 'inline-css tested with the file option', ->
+
+  before (done) -> compile_fixture.call(@, 'file_option', done)
+
+  it 'compiles project with the file option', (done) ->
+    p = path.join(@public,'test.html')
+    p.should.not.be.a.file()
     done()

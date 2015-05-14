@@ -1,5 +1,5 @@
 rootsInlineCss = require '../../..'
-options = {applyStyleTags:false, extraCss:"body{background: blue}"}
+options = {files: '/public/**.html'}
 module.exports =
   ignores: ["**/_*", "**/.DS_Store"]
   extensions: [rootsInlineCss(options)]
