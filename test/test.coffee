@@ -11,7 +11,7 @@ before (done) ->
   h.project.install_dependencies('*', done)
 
 after ->
-  # h.project.remove_folders('**/public')
+  h.project.remove_folders('**/public')
 
 describe 'roots compile with inline-css', ->
 
@@ -42,6 +42,25 @@ describe 'inline-css tested with the file option', ->
   before (done) -> compile_fixture.call(@, 'file_option', done)
 
   it 'compiles project with the file option', (done) ->
-    p = path.join(@public,'test.html')
-    p.should.not.be.a.file()
+    test = path.join(@public,'test.html')
+    test.should.be.a.file()
+    fs.existsSync(test).should.be.ok
+    contents = fs.readFileSync(test, 'utf8')
+    contents.should.match /color: red; text-decoration: underline;/
+    done()
+
+  it 'compiles other files that should be matched',(done) ->
+    kittens = path.join(@public,'kittens.html')
+    kittens.should.be.a.file()
+    fs.existsSync(kittens).should.be.ok
+    contents = fs.readFileSync(kittens, 'utf8')
+    contents.should.match /color: red; text-decoration: underline;">Kittens/
+    done()
+
+  it 'will not inline files not included', (done) ->
+    p = path.join(@public,'index.html')
+    p.should.be.a.file()
+    fs.existsSync(p).should.be.ok
+    contents = fs.readFileSync(p, 'utf8')
+    contents.should.match /{ color: red; }/
     done()

@@ -8,16 +8,16 @@
     "inline-css": "kylemac/inline-css",
     "lodash": "2.x",
     "minimatch": "2.x",
-    "roots-util": "^0.1.0"
+    "roots-util": "0.1.x"
   },
   "devDependencies": {
     "chai": "1.x",
     "chai-fs": "0.1.x",
     "coffee-script": "1.7.x",
     "coveralls": "2.x",
-    "istanbul": "0.3.x",
     "mocha": "2.x",
-    "roots": "3.0.x"
+    "roots": "3.0.x",
+    "istanbul": "0.3.x"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",

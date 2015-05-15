@@ -3,26 +3,25 @@ fs        = require 'fs'
 Promise   = require 'bluebird'
 inlineCss = require 'inline-css'
 RootsUtil = require 'roots-util'
-_         = require 'lodash'
 
 module.exports = (opts) ->
   opts ||= {}
-  opts = _.defaults opts,
-    files: []
-    applyStyleTags: true
-
 
   class RootsInlineCss
 
     constructor: (@roots) ->
-      @files = []
-      @util = new RootsUtil(@roots)
+      @files     = []
+      util      = new RootsUtil(@roots)
+      @filesnames = if opts.files then util.files(opts.files).map((f) -> path.join(roots.root,f.relative)) else []
 
     compile_hooks: ->
       category = 'inline-css'
 
       write: (ctx) =>
-        if path.extname(ctx.file_options._path) == '.html'
+        if path.extname(ctx.file_options._path) == '.html' and opts.files == undefined
+          @files.push(ctx)
+          return false
+        else if ctx.file_options.filename in @filesnames
           @files.push(ctx)
           return false
         else
