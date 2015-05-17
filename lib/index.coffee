@@ -1,42 +1,42 @@
+path      = require 'path'
+fs        = require 'fs'
+Promise   = require 'bluebird'
+inlineCss = require 'inline-css'
 RootsUtil = require 'roots-util'
-path = require 'path'
 
-# This is meant to serve as an example...
+module.exports = (opts) ->
+  opts ||= {}
 
-# Full Roots Extension API documentation located:
-# http://roots.readthedocs.org/en/latest/extensions.html
-
-module.exports = ->
   class RootsInlineCss
 
     constructor: (@roots) ->
-      # console.log @roots
+      @files     = []
+      util      = new RootsUtil(@roots)
 
-    # fs: ->
-      # category: 'foo'
-      # extract: true
-      # detect: (f) ->
-        # path.extname(f.relative) == 'js'
+      @filesnames = if opts.files
+        util.files(opts.files).map (f) ->
+          path.join(roots.root, f.relative)
+      else []
 
-    # compile_hooks: ->
-      # category: 'foo'
+    compile_hooks: ->
+      category = 'inline-css'
 
-      # before_file: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
+      write: (ctx) =>
+        if path.extname(ctx.file_options._path) == '.html' and !opts.files
+          @files.push(ctx)
+          return false
+        else if ctx.file_options.filename in @filesnames
+          @files.push(ctx)
+          return false
+        else
+          return true
 
-      # after_file: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # before_pass: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # after_pass: (ctx) ->
-        # ctx.content = ctx.content.toUpperCase()
-
-      # write: ->
-        # false
-
-    # category_hooks: ->
-      # after: (ctx) ->
-          # output = path.join(ctx.roots.config.output_path(), 'build.js')
-          # nodefn.call(fs.writeFile, output, @contents)
+    category_hooks: ->
+      after: (ctx, category) =>
+        if category == 'compiled'
+          Promise.map @files, (file) =>
+            tgt = path.join(@roots.root, @roots.config.output,
+              file.file_options._path)
+            opts.url ||= 'file://' + tgt
+            inlineCss(file.content, opts)
+            .then (html) -> fs.writeFile(tgt, html)
