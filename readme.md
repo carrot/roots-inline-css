@@ -10,18 +10,17 @@ a roots extension for inlining your CSS properties into the style attribute in a
 
 - make sure you are in your roots project directory
 - `npm install roots-inline-css --save`
-- modify your `app.coffee` file to include the extension, as such
-
-  ```coffee
-  rootsInlineCss = require('roots-inline-css')
-
-  module.exports =
-    options = {files: '/path/**.html', applyStyleTags:true}
-    extensions: [rootsInlineCss(options)]
-  ```
 
 ### Usage
 
+  ```coffee
+  # app.coffee
+  rootsInlineCss = require('roots-inline-css')
+
+  module.exports =
+    options = { files: '/path/**.html', applyStyleTags: true }
+    extensions: [ rootsInlineCss(options) ]
+  ```
 
 ### License & Contributing
 
