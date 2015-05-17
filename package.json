@@ -29,7 +29,9 @@
     "url": "https://github.com/carrot/roots-inline-css.git"
   },
   "keywords": [
-    "rootsextension"
+    "rootsextension",
+    "roots",
+    "roots-ext"
   ],
   "author": "Carrot Creative",
   "license": "MIT",
