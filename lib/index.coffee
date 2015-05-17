@@ -12,13 +12,17 @@ module.exports = (opts) ->
     constructor: (@roots) ->
       @files     = []
       util      = new RootsUtil(@roots)
-      @filesnames = if opts.files then util.files(opts.files).map((f) -> path.join(roots.root,f.relative)) else []
+
+      @filesnames = if opts.files
+        util.files(opts.files).map (f) ->
+          path.join(roots.root, f.relative)
+      else []
 
     compile_hooks: ->
       category = 'inline-css'
 
       write: (ctx) =>
-        if path.extname(ctx.file_options._path) == '.html' and opts.files == undefined
+        if path.extname(ctx.file_options._path) == '.html' and !opts.files
           @files.push(ctx)
           return false
         else if ctx.file_options.filename in @filesnames
