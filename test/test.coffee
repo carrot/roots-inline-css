@@ -4,7 +4,7 @@ fs    = require 'fs'
 
 compile_fixture = (fixture_name, done) ->
   @public = path.join(_path, fixture_name, 'public')
-  h.project.compile(Roots, fixture_name).then(-> done())
+  h.project.compile(Roots, fixture_name).then -> done()
 
 before (done) ->
   h.project.remove_folders('**/public')
@@ -25,6 +25,21 @@ describe 'roots compile with inline-css', ->
     contents.should.match /<p style="color: red; text-decoration: underline;">/
     done()
 
+describe 'roots multipass with inline-css', ->
+
+  before (done) ->
+    compile_fixture.call(@, 'multipass', done)
+
+  it 'compiles basic project', (done) ->
+    p = path.join(@public, 'index.html')
+    p.should.be.a.file()
+    fs.existsSync(p).should.be.ok
+    contents = fs.readFileSync(p, 'utf8')
+    contents.should.match(
+      /<p style="color: red; text-decoration: underline;">bar<\/p>/
+    )
+    done()
+
 describe 'inline-css tested with options', ->
 
   before (done) -> compile_fixture.call(@, 'options', done)
@@ -34,7 +49,9 @@ describe 'inline-css tested with options', ->
     p.should.be.a.file()
     fs.existsSync(p).should.be.ok
     contents = fs.readFileSync(p, 'utf8')
-    contents.should.match /<body style="background: blue;"><p style="text-decoration: underline;">/
+    contents.should.match(
+      /<body style="background: blue;"><p style="text-decoration: underline;">/
+    )
     done()
 
 describe 'inline-css tested with the file option', ->
