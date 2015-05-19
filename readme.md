@@ -13,6 +13,8 @@ a roots extension for inlining your CSS properties into the style attribute in a
 
 ### Usage
 
+  Modify your `app.coffee` files to include roots-inline-css
+
   ```coffee
   # app.coffee
   rootsInlineCss = require('roots-inline-css')
@@ -22,7 +24,11 @@ a roots extension for inlining your CSS properties into the style attribute in a
     extensions: [ rootsInlineCss(options) ]
   ```
 
+  This extension provides a way for you to inline your html with css. By default all of your `html` files will be inlined however you can specify through options which files you want inlined either with a single file or a [glob expression](https://github.com/isaacs/minimatch).
+
+  A full list of options can be found [here](https://github.com/jonkemp/inline-css).
+
 ### License & Contributing
 
-- Details on the license [can be found here](LICENSE.md)
+- Details on the license [can be found here](license.md)
 - Details on running tests and contributing [can be found here](contributing.md)
