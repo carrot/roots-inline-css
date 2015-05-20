@@ -10,9 +10,6 @@ before (done) ->
   h.project.remove_folders('**/public')
   h.project.install_dependencies('*', done)
 
-after ->
-  h.project.remove_folders('**/public')
-
 describe 'roots compile with inline-css', ->
 
   before (done) -> compile_fixture.call(@, 'basic', done)
@@ -80,4 +77,16 @@ describe 'inline-css tested with the file option', ->
     fs.existsSync(p).should.be.ok
     contents = fs.readFileSync(p, 'utf8')
     contents.should.match /{ color: red; }/
+    done()
+
+describe 'inline-css together with jade + roots-tumblr', ->
+  before (done) -> compile_fixture.call(@, 'tumblr', done)
+
+  it 'compiles the project', (done) ->
+    test = path.join(@public,'index.html')
+    test.should.be.a.file()
+    fs.existsSync(test).should.be.ok
+    contents = fs.readFileSync(test, 'utf8')
+    contents.should.match /<p style="color: red; text-decoration: underline;">/
+    contents.should.match(/<title>Untitled<\/title>/)
     done()
